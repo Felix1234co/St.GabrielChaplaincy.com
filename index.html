@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>St. Gabriel Chaplaincy - Member Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .5; }
+        }
+        .file-input-mobile {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        .file-input-mobile::-webkit-file-upload-button {
+            visibility: hidden;
+        }
+        .file-input-mobile::before {
+            content: 'Choose File';
+            display: inline-block;
+            background: linear-gradient(top, #f9f9f9, #e3e3e3);
+            border: 1px solid #999;
+            border-radius: 3px;
+            padding: 5px 8px;
+            outline: none;
+            white-space: nowrap;
+            cursor: pointer;
+            text-shadow: 1px 1px #fff;
+            font-weight: 700;
+            font-size: 10pt;
+        }
+        .file-input-mobile:hover::before {
+            border-color: black;
+        }
+        .file-input-mobile:active::before {
+            background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 via-white to-purple-50 min-h-screen">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                        <i class="fas fa-church text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900">St. Gabriel Chaplaincy</h1>
+                        <p class="text-sm text-gray-600">Member Registration Portal</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <div class="flex items-center space-x-2 text-sm text-gray-600">
+                        <i class="fas fa-shield-alt text-green-600"></i>
+                        <span class="hidden md:inline">Secure Registration</span>
+                        <span class="md:hidden">Secure</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Welcome Section -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-900 mb-4">Welcome to Our Community</h2>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Join St. Gabriel Chaplaincy and become part of our vibrant Catholic community. 
+                Complete your registration and payment to receive your official membership ID card.
+            </p>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-blue-100 text-sm">Total Members</p>
+                        <p class="text-3xl font-bold" id="totalMembers">0</p>
+                    </div>
+                    <i class="fas fa-users text-blue-200 text-3xl"></i>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-green-100 text-sm">Secure Payment</p>
+                        <p class="text-2xl font-bold">₦100</p>
+                    </div>
+                    <i class="fas fa-shield-alt text-green-200 text-3xl"></i>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg p-6 card-hover">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-purple-100 text-sm">ID Card Ready</p>
+                        <p class="text-2xl font-bold">24-48hrs</p>
+                    </div>
+                    <i class="fas fa-calendar-alt text-purple-200 text-3xl"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Registration Steps -->
+        <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-6 mb-8">
+            <h3 class="text-lg font-semibold text-amber-800 mb-4">Registration Process</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-amber-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">1</div>
+                    <p class="font-medium text-amber-800">Fill Registration Form</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-amber-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">2</div>
+                    <p class="font-medium text-amber-800">Complete Payment</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-12 h-12 bg-amber-600 text-white rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">3</div>
+                    <p class="font-medium text-amber-800">Receive ID Card</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="bg-white rounded-lg p-6 border-l-4 border-l-blue-500 shadow-sm card-hover">
+                <div class="flex items-center gap-3 mb-3">
+                    <i class="fas fa-star text-blue-600 text-xl"></i>
+                    <h4 class="font-semibold">Official Membership</h4>
+                </div>
+                <p class="text-sm text-gray-600">Get your official membership ID card with photo and church seal</p>
+            </div>
+
+            <div class="bg-white rounded-lg p-6 border-l-4 border-l-green-500 shadow-sm card-hover">
+                <div class="flex items-center gap-3 mb-3">
+                    <i class="fas fa-heart text-green-600 text-xl"></i>
+                    <h4 class="font-semibold">Community Access</h4>
+                </div>
+                <p class="text-sm text-gray-600">Join ministries, attend events, and participate in parish activities</p>
+            </div>
+
+            <div class="bg-white rounded-lg p-6 border-l-4 border-l-purple-500 shadow-sm card-hover">
+                <div class="flex items-center gap-3 mb-3">
+                    <i class="fas fa-award text-purple-600 text-xl"></i>
+                    <h4 class="font-semibold">Spiritual Growth</h4>
+                </div>
+                <p class="text-sm text-gray-600">Grow in faith through our programs, retreats, and spiritual guidance</p>
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="bg-white rounded-lg shadow-lg p-8">
+            <div class="text-center mb-8">
+                <h3 class="text-2xl font-bold text-gray-900 flex items-center justify-center gap-3">
+                    <i class="fas fa-church text-blue-600"></i>
+                    Member Registration Form
+                </h3>
+                <p class="text-gray-600 mt-2">Please fill in all required information to complete your registration</p>
+            </div>
+
+            <form id="registrationForm" class="space-y-8">
+                <!-- Personal Information Section -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 pb-2 border-b border-gray-200">
+                        <i class="fas fa-user text-blue-600 text-xl"></i>
+                        <h4 class="text-xl font-semibold text-gray-900">Personal Information</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                            <input type="text" id="fullName" name="fullName" required 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="Enter your full name">
+                        </div>
+
+                        <div>
+                            <label for="dateOfBirth" class="block text-sm font-medium text-gray-700 mb-2">Date of Birth *</label>
+                            <div class="relative">
+                                <i class="fas fa-calendar-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="date" id="dateOfBirth" name="dateOfBirth" required 
+                                       class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="phoneNumber" class="block text-sm font-medium text-gray-700 mb-2">Phone Number *</label>
+                            <div class="relative">
+                                <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="tel" id="phoneNumber" name="phoneNumber" required 
+                                       class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="e.g., +234 801 234 5678">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="emailAddress" class="block text-sm font-medium text-gray-700 mb-2">Email Address *</label>
+                            <div class="relative">
+                                <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="email" id="emailAddress" name="emailAddress" required 
+                                       class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                       placeholder="your.email@example.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Church Information Section -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 pb-2 border-b border-gray-200">
+                        <i class="fas fa-church text-blue-600 text-xl"></i>
+                        <h4 class="text-xl font-semibold text-gray-900">Church Information</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="ministry" class="block text-sm font-medium text-gray-700 mb-2">Preferred Ministry *</label>
+                            <select id="ministry" name="ministry" required 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select a ministry</option>
+                                <option value="Choir">Choir</option>
+                                <option value="Ushering">Ushering</option>
+                                <option value="Lectors">Lectors</option>
+                                <option value="Altar Servers">Altar Servers</option>
+                                <option value="Youth Ministry">Youth Ministry</option>
+                                <option value="Women's Guild">Women's Guild</option>
+                                <option value="Men's Fellowship">Men's Fellowship</option>
+                                <option value="Children's Ministry">Children's Ministry</option>
+                                <option value="Prayer Group">Prayer Group</option>
+                                <option value="Evangelization">Evangelization</option>
+                                <option value="Social Services">Social Services</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div id="customMinistryDiv" style="display: none;">
+                            <label for="customMinistry" class="block text-sm font-medium text-gray-700 mb-2">Specify Ministry *</label>
+                            <input type="text" id="customMinistry" name="customMinistry" 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                   placeholder="Please specify your ministry">
+                        </div>
+
+                        <div>
+                            <label for="sacramentStatus" class="block text-sm font-medium text-gray-700 mb-2">Sacrament Status *</label>
+                            <select id="sacramentStatus" name="sacramentStatus" required 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select your sacrament status</option>
+                                <option value="Baptized">Baptized</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="First Communion">First Communion</option>
+                                <option value="Baptized & Confirmed">Baptized & Confirmed</option>
+                                <option value="All Sacraments Received">All Sacraments Received</option>
+                                <option value="Preparing for Sacraments">Preparing for Sacraments</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="yearsInFaith" class="block text-sm font-medium text-gray-700 mb-2">Years in Catholic Faith *</label>
+                            <select id="yearsInFaith" name="yearsInFaith" required 
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="">Select years in faith</option>
+                                <option value="0-1">Less than 1 year</option>
+                                <option value="1-5">1-5 years</option>
+                                <option value="6-10">6-10 years</option>
+                                <option value="11-20">11-20 years</option>
+                                <option value="21-30">21-30 years</option>
+                                <option value="30+">More than 30 years</option>
+                                <option value="lifetime">Lifetime Catholic</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Document Upload Section -->
+                <div class="space-y-6">
+                    <div class="flex items-center gap-3 pb-2 border-b border-gray-200">
+                        <i class="fas fa-camera text-blue-600 text-xl"></i>
+                        <h4 class="text-xl font-semibold text-gray-900">Document Upload</h4>
+                    </div>
+
+                    <div>
+                        <label for="passport" class="block text-sm font-medium text-gray-700 mb-2">Passport Photograph *</label>
+                        <div class="flex flex-col md:flex-row gap-6">
+                            <label for="passport" class="flex flex-col items-center justify-center w-full md:w-48 h-48 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-upload text-gray-400 text-2xl mb-2"></i>
+                                    <p class="text-sm text-gray-500 text-center px-2" id="passportLabel">📷 Upload passport photo</p>
+                                    <p class="text-xs text-gray-400 mt-1">JPG, PNG (Max 5MB)</p>
+                                    <p class="text-xs text-blue-600 mt-1">📱 Tap to use camera or gallery</p>
+                                </div>
+                                <input id="passport" type="file" class="hidden" accept="image/*" required>
+                            </label>
+
+                            <div id="passportPreview" class="hidden">
+                                <img id="passportImage" src="/placeholder.svg" alt="Passport preview" class="w-48 h-48 object-cover rounded-lg border-2 border-gray-300">
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500 mt-2">
+                            Please upload a clear passport-style photograph for your ID card. On mobile, you can take a photo directly or choose from gallery.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Terms and Conditions -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6">
+                    <h4 class="font-semibold text-blue-800 mb-4">📋 Registration Terms</h4>
+                    <div class="space-y-2 text-sm text-blue-700">
+                        <p>✅ I confirm that all information provided is accurate and truthful</p>
+                        <p>✅ I agree to participate actively in the selected ministry</p>
+                        <p>✅ I understand that a registration fee of ₦100 is required</p>
+                        <p>✅ I consent to my information being used for church administrative purposes</p>
+                        <p>✅ I will collect my ID card from the church office when notified</p>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                    <button type="button" onclick="resetForm()" 
+                            class="w-full sm:w-auto px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+                        Reset Form
+                    </button>
+                    <button type="submit" id="submitBtn"
+                            class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 px-6 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                        Proceed to Payment →
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[95vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="text-center mb-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">💳 Complete Payment</h3>
+                    <p class="text-gray-600">Choose your preferred payment method to complete registration</p>
+                </div>
+
+                <!-- Registration Summary -->
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-6 mb-6">
+                    <h4 class="font-semibold text-blue-800 mb-4">📋 Registration Summary</h4>
+                    <div id="registrationSummary" class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                        <!-- Summary will be populated by JavaScript -->
+                    </div>
+                    <div class="mt-4 p-3 bg-white rounded-lg border-l-4 border-blue-500">
+                        <div class="text-lg font-bold text-blue-800">Registration Fee: ₦100</div>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="space-y-4">
+                    <!-- Flutterwave Payment -->
+                    <div class="border border-gray-200 rounded-lg p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fas fa-credit-card text-blue-600 text-xl"></i>
+                            <h4 class="text-lg font-semibold">Pay with Card or Online Banking</h4>
+                        </div>
+                        <p class="text-sm text-gray-600 mb-4">
+                            Secure payment powered by Paystack. Pay with your debit card, credit card, or online banking.
+                        </p>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="bg-green-50 p-3 rounded-lg border border-green-200">
+                                <div class="flex items-center gap-2 text-green-800">
+                                    <i class="fas fa-check-circle"></i>
+                                    <span class="font-medium text-sm">Secure & Instant</span>
+                                </div>
+                                <p class="text-xs text-green-700 mt-1">Bank-level security</p>
+                            </div>
+                            <div class="bg-blue-50 p-3 rounded-lg border border-blue-200">
+                                <div class="flex items-center gap-2 text-blue-800">
+                                    <i class="fas fa-external-link-alt"></i>
+                                    <span class="font-medium text-sm">Multiple Options</span>
+                                </div>
+                                <p class="text-xs text-blue-700 mt-1">Card, Bank, USSD, Transfer</p>
+                            </div>
+                        </div>
+
+                        <button onclick="payWithPaystack()"
+                                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors">
+                            Pay ₦100 with Paystack
+                        </button>
+                    </div>
+
+                    <!-- Bank Transfer -->
+                    <div class="border border-gray-200 rounded-lg p-6">
+                        <div class="flex items-center gap-3 mb-4">
+                            <i class="fas fa-university text-green-600 text-xl"></i>
+                            <h4 class="text-lg font-semibold">Bank Transfer</h4>
+                        </div>
+
+                        <div class="bg-white p-4 rounded-lg border-l-4 border-green-500 mb-4">
+                            <h5 class="font-semibold mb-2">Transfer to:</h5>
+                            <div class="space-y-1 text-sm">
+                                <div class="flex justify-between">
+                                    <strong>Bank Name:</strong>
+                                    <span>Fidelity Bank Nigeria</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <strong>Account Number:</strong>
+                                    <span class="font-mono">7012671122</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <strong>Account Name:</strong>
+                                    <span>St. Gabriel Chaplaincy</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <strong>Amount:</strong>
+                                    <span class="text-green-600 font-bold">₦100</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <div>
+                                <label for="paymentScreenshot" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Upload Payment Screenshot *
+                                </label>
+                                <label for="paymentScreenshot" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-green-300 rounded-lg cursor-pointer bg-green-50 hover:bg-green-100 transition-colors">
+                                    <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                        <i class="fas fa-upload text-green-500 text-xl mb-2"></i>
+                                        <p class="text-sm text-green-600 text-center px-2" id="screenshotLabel">📱 Upload payment receipt/screenshot</p>
+                                        <p class="text-xs text-blue-600 mt-1">📷 Tap to use camera or gallery</p>
+                                    </div>
+                                    <input id="paymentScreenshot" type="file" class="hidden" accept="image/*">
+                                </label>
+                                <div id="screenshotPreview" class="hidden mt-4 text-center">
+                                    <img id="screenshotImage" src="/placeholder.svg" alt="Payment screenshot" class="max-w-48 max-h-48 rounded-lg border-2 border-green-300 mx-auto">
+                                </div>
+                            </div>
+
+                            <button onclick="verifyBankTransfer()" id="verifyBtn" disabled
+                                    class="w-full bg-green-600 hover:bg-green-700 disabled:bg-gray-400 text-white py-3 px-6 rounded-lg font-semibold transition-colors">
+                                Verify Payment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="flex gap-4 mt-6">
+                    <button onclick="closePaymentModal()" 
+                            class="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-6 rounded-lg font-semibold transition-colors">
+                        Back to Form
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full">
+            <div class="p-6 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-900 mb-2">Registration Successful! 🎉</h3>
+                <p class="text-gray-600 mb-6">Your membership registration has been completed successfully.</p>
+                
+                <div id="memberDetails" class="bg-gray-50 rounded-lg p-4 mb-6 text-left">
+                    <!-- Member details will be populated by JavaScript -->
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="downloadIdCard()" 
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors">
+                        📄 Download ID Card Preview
+                    </button>
+                    <button onclick="closeSuccessModal()" 
+                            class="w-full bg-gray-300 hover:bg-gray-400 text-gray-700 py-3 px-6 rounded-lg font-semibold transition-colors">
+                        Register Another Member
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-50 border-t mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="text-center">
+                <p class="text-gray-600">© 2024 St. Gabriel Chaplaincy. All rights reserved.</p>
+                <p class="text-sm text-gray-500 mt-2">Building a stronger Catholic community together</p>
+                <div class="mt-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-xs text-gray-400">
+                    <span>📞 +234 7012671122</span>
+                    <span class="hidden sm:inline">|</span>
+                    <span>📧 admin@stgabrielchaplaincy.org</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        let currentMemberData = null;
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            updateMemberCount();
+            setupFormHandlers();
+        });
+
+        function updateMemberCount() {
+            const members = JSON.parse(localStorage.getItem('members') || '[]');
+            const count = members.length;
+            document.getElementById('totalMembers').textContent = count;
+        }
+
+        function setupFormHandlers() {
+            // Ministry selection handler
+            document.getElementById('ministry').addEventListener('change', function() {
+                const customDiv = document.getElementById('customMinistryDiv');
+                if (this.value === 'Other') {
+                    customDiv.style.display = 'block';
+                    document.getElementById('customMinistry').required = true;
+                } else {
+                    customDiv.style.display = 'none';
+                    document.getElementById('customMinistry').required = false;
+                }
+            });
+
+            // Passport photo handler
+            document.getElementById('passport').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('passportImage').src = e.target.result;
+                        document.getElementById('passportPreview').classList.remove('hidden');
+                        document.getElementById('passportLabel').textContent = '✅ Photo uploaded!';
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Payment screenshot handler
+            document.getElementById('paymentScreenshot').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('screenshotImage').src = e.target.result;
+                        document.getElementById('screenshotPreview').classList.remove('hidden');
+                        document.getElementById('screenshotLabel').textContent = '✅ Screenshot uploaded!';
+                        document.getElementById('verifyBtn').disabled = false;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Form submission handler
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                if (validateForm()) {
+                    showPaymentModal();
+                }
+            });
+        }
+
+        function validateForm() {
+            const requiredFields = ['fullName', 'dateOfBirth', 'phoneNumber', 'emailAddress', 'ministry', 'sacramentStatus', 'yearsInFaith', 'passport'];
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (!element.value && field !== 'passport') {
+                    element.classList.add('border-red-500');
+                    isValid = false;
+                } else if (field === 'passport' && !element.files[0]) {
+                    element.parentElement.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    element.classList.remove('border-red-500');
+                    if (field === 'passport') {
+                        element.parentElement.classList.remove('border-red-500');
+                    }
+                }
+            });
+
+            // Check custom ministry if "Other" is selected
+            if (document.getElementById('ministry').value === 'Other') {
+                const customMinistry = document.getElementById('customMinistry');
+                if (!customMinistry.value) {
+                    customMinistry.classList.add('border-red-500');
+                    isValid = false;
+                } else {
+                    customMinistry.classList.remove('border-red-500');
+                }
+            }
+
+            // Validate age (must be at least 16)
+            const dob = new Date(document.getElementById('dateOfBirth').value);
+            const today = new Date();
+            const age = today.getFullYear() - dob.getFullYear();
+            if (age < 16) {
+                document.getElementById('dateOfBirth').classList.add('border-red-500');
+                alert('You must be at least 16 years old to register.');
+                isValid = false;
+            }
+
+            // Validate email format
+            const email = document.getElementById('emailAddress').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                document.getElementById('emailAddress').classList.add('border-red-500');
+                alert('Please enter a valid email address.');
+                isValid = false;
+            }
+
+            // Validate phone number
+            const phone = document.getElementById('phoneNumber').value;
+            const phoneRegex = /^[\d\s\-+()]{10,}$/;
+            if (!phoneRegex.test(phone)) {
+                document.getElementById('phoneNumber').classList.add('border-red-500');
+                alert('Please enter a valid phone number.');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                alert('Please fill in all required fields correctly.');
+            }
+
+            return isValid;
+        }
+
+        function showPaymentModal() {
+            // Populate registration summary
+            const formData = new FormData(document.getElementById('registrationForm'));
+            const summary = document.getElementById('registrationSummary');
+            
+            const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
+            
+            summary.innerHTML = `
+                <div><strong>Name:</strong> ${formData.get('fullName')}</div>
+                <div><strong>Email:</strong> ${formData.get('emailAddress')}</div>
+                <div><strong>Phone:</strong> ${formData.get('phoneNumber')}</div>
+                <div><strong>Ministry:</strong> ${ministry}</div>
+                <div><strong>Status:</strong> ${formData.get('sacramentStatus')}</div>
+                <div><strong>Years in Faith:</strong> ${formData.get('yearsInFaith')}</div>
+            `;
+
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function payWithPaystack() {
+            const formData = new FormData(document.getElementById('registrationForm'));
+            const memberId = generateMemberId();
+
+            const handler = PaystackPop.setup({
+                key: 'pk_live_fe2da94627bd479024d134a881806a8c0264cb37', // Your Paystack public key
+                email: formData.get('emailAddress'),
+                amount: 10000, // Amount in kobo (100 NGN = 10000 kobo)
+                currency: 'NGN',
+                ref: `SG-${memberId}-${Date.now()}`,
+                metadata: {
+                    custom_fields: [
+                        {
+                            display_name: "Full Name",
+                            variable_name: "full_name",
+                            value: formData.get('fullName')
+                        },
+                        {
+                            display_name: "Phone Number",
+                            variable_name: "phone_number",
+                            value: formData.get('phoneNumber')
+                        }
+                    ]
+                },
+                callback: function(response) {
+                    if (response.status === 'success') {
+                        processSuccessfulPayment(memberId, 'Paystack', response.reference);
+                    } else {
+                        alert("Payment was not completed. Please try again.");
+                    }
+                },
+                onClose: function() {
+                    alert('Payment window closed.');
+                }
+            });
+            handler.openIframe();
+        }
+
+        function verifyBankTransfer() {
+            const memberId = generateMemberId();
+            
+            // Simulate verification process
+            document.getElementById('verifyBtn').textContent = 'Verifying Payment...';
+            document.getElementById('verifyBtn').disabled = true;
+            
+            setTimeout(() => {
+                processSuccessfulPayment(memberId, 'Bank Transfer', `BT-${Date.now()}`);
+            }, 2000);
+        }
+
+        function processSuccessfulPayment(memberId, paymentMethod, paymentReference) {
+            const formData = new FormData(document.getElementById('registrationForm'));
+            const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
+            
+            currentMemberData = {
+                id: memberId,
+                name: formData.get('fullName'),
+                email: formData.get('emailAddress'),
+                phone: formData.get('phoneNumber'),
+                dob: formData.get('dateOfBirth'),
+                ministry: ministry,
+                status: formData.get('sacramentStatus'),
+                yearsInFaith: formData.get('yearsInFaith'),
+                paymentMethod: paymentMethod,
+                paymentReference: paymentReference,
+                registrationDate: new Date().toISOString(),
+                passportPhoto: document.getElementById('passport').files[0] ? 'uploaded' : 'none'
+            };
+
+            // Save to localStorage (in production, send to backend)
+            saveMemberData(currentMemberData);
+            
+            // Send admin notification
+            sendAdminNotification(currentMemberData);
+            
+            // Update statistics
+            updateStats();
+            
+            // Show success modal
+            closePaymentModal();
+            showSuccessModal();
+        }
+
+        function saveMemberData(memberData) {
+            const formData = new FormData(document.getElementById('registrationForm'));
+            const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
+            const formDataObj = {
+                fullName: formData.get('fullName'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                phoneNumber: formData.get('phoneNumber'),
+                emailAddress: formData.get('emailAddress'),
+                ministry: ministry,
+                customMinistry: formData.get('customMinistry'),
+                sacramentStatus: formData.get('sacramentStatus'),
+                yearsInFaith: formData.get('yearsInFaith'),
+                passport: null,
+                paymentScreenshot: null
+            };
+            const memberEntry = {
+                memberData: memberData,
+                formData: formDataObj,
+                timestamp: new Date().toISOString(),
+                status: 'pending_id_generation'
+            };
+            const members = JSON.parse(localStorage.getItem('members') || '[]');
+            members.push(memberEntry);
+            localStorage.setItem('members', JSON.stringify(members));
+        }
+
+        function sendAdminNotification(memberData) {
+            const formData = new FormData(document.getElementById('registrationForm'));
+            const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
+            const formDataObj = {
+                fullName: formData.get('fullName'),
+                dateOfBirth: formData.get('dateOfBirth'),
+                phoneNumber: formData.get('phoneNumber'),
+                emailAddress: formData.get('emailAddress'),
+                ministry: ministry,
+                customMinistry: formData.get('customMinistry'),
+                sacramentStatus: formData.get('sacramentStatus'),
+                yearsInFaith: formData.get('yearsInFaith'),
+                passport: null,
+                paymentScreenshot: null
+            };
+            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+            notifications.push({
+                memberData: memberData,
+                formData: formDataObj,
+                timestamp: new Date().toISOString(),
+                needsIdCard: true,
+                status: 'pending_id_generation'
+            });
+            localStorage.setItem('adminNotifications', JSON.stringify(notifications));
+        }
+
+        function updateStats() {
+            const today = new Date().toISOString().split('T')[0];
+            const thisMonth = `${new Date().getFullYear()}-${(new Date().getMonth() + 1).toString().padStart(2, '0')}`;
+            const thisYear = new Date().getFullYear().toString();
+
+            const stats = JSON.parse(localStorage.getItem('registrationStats') || '{"daily": {}, "monthly": {}, "yearly": {}}');
+
+            stats.daily[today] = (stats.daily[today] || 0) + 1;
+            stats.monthly[thisMonth] = (stats.monthly[thisMonth] || 0) + 1;
+            stats.yearly[thisYear] = (stats.yearly[thisYear] || 0) + 1;
+
+            localStorage.setItem('registrationStats', JSON.stringify(stats));
+
+            updateMemberCount();
+        }
+
+        function showSuccessModal() {
+            const details = document.getElementById('memberDetails');
+            details.innerHTML = `
+                <div class="space-y-2 text-sm">
+                    <div><strong>Member ID:</strong> ${currentMemberData.id}</div>
+                    <div><strong>Name:</strong> ${currentMemberData.name}</div>
+                    <div><strong>Ministry:</strong> ${currentMemberData.ministry}</div>
+                    <div><strong>Payment Method:</strong> ${currentMemberData.paymentMethod}</div>
+                    <div><strong>Reference:</strong> ${currentMemberData.paymentReference}</div>
+                </div>
+                <div class="mt-4 p-3 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-blue-800">
+                        <strong>Next Steps:</strong><br>
+                        • Your ID card will be ready within 24-48 hours<br>
+                        • You will be notified when it's ready for collection<br>
+                        • Welcome to St. Gabriel Chaplaincy! 🎉
+                    </p>
+                </div>
+            `;
+            
+            document.getElementById('successModal').classList.remove('hidden');
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.add('hidden');
+            resetForm();
+        }
+
+        function downloadIdCard() {
+            // In a real application, this would generate and download the actual ID card
+            alert('ID card preview will be available once the admin processes your registration. You will be notified when ready!');
+        }
+
+        function resetForm() {
+            document.getElementById('registrationForm').reset();
+            document.getElementById('passportPreview').classList.add('hidden');
+            document.getElementById('customMinistryDiv').style.display = 'none';
+            document.getElementById('passportLabel').textContent = '📷 Upload passport photo';
+            currentMemberData = null;
+        }
+
+        function generateMemberId() {
+            const prefix = 'SG';
+            const timestamp = Date.now().toString().slice(-6);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `${prefix}${timestamp}${random}`;
+        }
+    </script>
+</body>
+</html>
