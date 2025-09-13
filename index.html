@@ -6,6 +6,7 @@
     <title>St. Gabriel Chaplaincy - Member Registration</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .gradient-bg {
@@ -516,6 +517,11 @@
     </footer>
 
     <script>
+        // Supabase configuration
+        const supabaseUrl = 'https://sqnofatsjaedyufltppj.supabase.co'
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbm9mYXRzamFlZHl1Zmx0cHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzkxOTIsImV4cCI6MjA3MzExNTE5Mn0.teGpVU2XPFyLoAWGI6VAD2FR2fFeXEjBBYyFiBMvZZo'
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
+
         let currentMemberData = null;
 
         // Initialize page
@@ -524,10 +530,17 @@
             setupFormHandlers();
         });
 
-        function updateMemberCount() {
-            const members = JSON.parse(localStorage.getItem('members') || '[]');
-            const count = members.length;
-            document.getElementById('totalMembers').textContent = count;
+        async function updateMemberCount() {
+            try {
+                const { data, error } = await supabase
+                    .from('members')
+                    .select('id', { count: 'exact' });
+                if (error) throw error;
+                document.getElementById('totalMembers').textContent = data.length;
+            } catch (error) {
+                console.error('Error fetching member count:', error);
+                document.getElementById('totalMembers').textContent = '0';
+            }
         }
 
         function setupFormHandlers() {
@@ -720,7 +733,7 @@
             }, 2000);
         }
 
-        function processSuccessfulPayment(memberId, paymentMethod, paymentReference) {
+        async function processSuccessfulPayment(memberId, paymentMethod, paymentReference) {
             const formData = new FormData(document.getElementById('registrationForm'));
             const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
             
@@ -739,11 +752,8 @@
                 passportPhoto: document.getElementById('passport').files[0] ? 'uploaded' : 'none'
             };
 
-            // Save to localStorage (in production, send to backend)
-            saveMemberData(currentMemberData);
-            
-            // Send admin notification
-            sendAdminNotification(currentMemberData);
+            // Save to database
+            await saveMemberData(currentMemberData);
             
             // Update statistics
             updateStats();
@@ -753,57 +763,32 @@
             showSuccessModal();
         }
 
-        function saveMemberData(memberData) {
+        async function saveMemberData(memberData) {
             const formData = new FormData(document.getElementById('registrationForm'));
             const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
-            const formDataObj = {
-                fullName: formData.get('fullName'),
-                dateOfBirth: formData.get('dateOfBirth'),
-                phoneNumber: formData.get('phoneNumber'),
-                emailAddress: formData.get('emailAddress'),
-                ministry: ministry,
-                customMinistry: formData.get('customMinistry'),
-                sacramentStatus: formData.get('sacramentStatus'),
-                yearsInFaith: formData.get('yearsInFaith'),
-                passport: null,
-                paymentScreenshot: null
-            };
             const memberEntry = {
-                memberData: memberData,
-                formData: formDataObj,
-                timestamp: new Date().toISOString(),
+                member_id: memberData.id,
+                full_name: formData.get('fullName'),
+                email_address: formData.get('emailAddress'),
+                phone_number: formData.get('phoneNumber'),
+                date_of_birth: formData.get('dateOfBirth'),
+                ministry: ministry,
+                sacrament_status: formData.get('sacramentStatus'),
+                years_in_faith: formData.get('yearsInFaith'),
+                registration_date: new Date().toISOString(),
                 status: 'pending_id_generation'
             };
-            const members = JSON.parse(localStorage.getItem('members') || '[]');
-            members.push(memberEntry);
-            localStorage.setItem('members', JSON.stringify(members));
+            try {
+                const { error } = await supabase
+                    .from('members')
+                    .insert([memberEntry]);
+                if (error) throw error;
+            } catch (error) {
+                console.error('Error saving member data:', error);
+            }
         }
 
-        function sendAdminNotification(memberData) {
-            const formData = new FormData(document.getElementById('registrationForm'));
-            const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
-            const formDataObj = {
-                fullName: formData.get('fullName'),
-                dateOfBirth: formData.get('dateOfBirth'),
-                phoneNumber: formData.get('phoneNumber'),
-                emailAddress: formData.get('emailAddress'),
-                ministry: ministry,
-                customMinistry: formData.get('customMinistry'),
-                sacramentStatus: formData.get('sacramentStatus'),
-                yearsInFaith: formData.get('yearsInFaith'),
-                passport: null,
-                paymentScreenshot: null
-            };
-            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
-            notifications.push({
-                memberData: memberData,
-                formData: formDataObj,
-                timestamp: new Date().toISOString(),
-                needsIdCard: true,
-                status: 'pending_id_generation'
-            });
-            localStorage.setItem('adminNotifications', JSON.stringify(notifications));
-        }
+
 
         function updateStats() {
             const today = new Date().toISOString().split('T')[0];
