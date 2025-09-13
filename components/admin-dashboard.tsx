@@ -30,9 +30,9 @@ interface AdminNotification {
     customMinistry: string
     sacramentStatus: string
     yearsInFaith: string
-    passport: string | null
-    paymentScreenshot: string | null
-  } | null
+    passport: File | null
+    paymentScreenshot: File | null
+  }
   timestamp: string
   needsIdCard: boolean
   status: string
@@ -156,9 +156,7 @@ export function AdminDashboard() {
                 <p>Member Identification Card</p>
               </div>
               <div class="content">
-                <div class="photo">
-                  ${member.formData?.passport ? `<img src="${member.formData.passport}" alt="Photo" style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;" />` : '👤'}
-                </div>
+                <div class="photo">👤</div>
                 <div class="info">
                   <div>
                     <div class="label">Name</div>

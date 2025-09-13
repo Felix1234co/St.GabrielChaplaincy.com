@@ -95,20 +95,17 @@
                 </div>
 
                 <div class="bg-gray-800 text-green-400 p-4 rounded-lg text-sm">
-CREATE TABLE members (
+                    <pre><code>CREATE TABLE members (
     id SERIAL PRIMARY KEY,
     member_id VARCHAR(20) UNIQUE,
     full_name VARCHAR(255) NOT NULL,
     email_address VARCHAR(255) NOT NULL,
     phone_number VARCHAR(20),
-    date_of_birth DATE,
     ministry VARCHAR(100),
     sacrament_status VARCHAR(50),
-    years_in_faith VARCHAR(10),
     registration_date TIMESTAMP DEFAULT NOW(),
-    photo_url TEXT,
-    status VARCHAR(50) DEFAULT 'pending_id_generation'
-);
+    photo_url TEXT
+);</code></pre>
                 </div>
 
                 <div class="bg-green-50 p-4 rounded-lg">

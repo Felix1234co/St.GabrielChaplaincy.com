@@ -33,19 +33,6 @@ interface FormData {
   paymentScreenshot: File | null
 }
 
-interface ProcessedFormData {
-  fullName: string
-  dateOfBirth: string
-  phoneNumber: string
-  emailAddress: string
-  ministry: string
-  customMinistry: string
-  sacramentStatus: string
-  yearsInFaith: string
-  passport: string | null
-  paymentScreenshot: string | null
-}
-
 export default function Home() {
   const [currentStep, setCurrentStep] = useState<"form" | "payment" | "success">("form")
   const [formData, setFormData] = useState<FormData | null>(null)
@@ -70,17 +57,10 @@ export default function Home() {
   }
 
   const sendAdminNotification = async (memberData: MemberData, formData: FormData | null) => {
-    // Convert files to base64
-    const processedFormData: ProcessedFormData | null = formData ? {
-      ...formData,
-      passport: formData.passport ? await fileToBase64(formData.passport) : null,
-      paymentScreenshot: formData.paymentScreenshot ? await fileToBase64(formData.paymentScreenshot) : null,
-    } : null
-
     // In a real application, this would send to your backend
     const adminData = {
       memberData,
-      formData: processedFormData,
+      formData,
       timestamp: new Date().toISOString(),
       needsIdCard: true,
       status: "pending_id_generation",
@@ -92,15 +72,6 @@ export default function Home() {
     localStorage.setItem("adminNotifications", JSON.stringify(existingNotifications))
 
     console.log("Admin notification sent:", adminData)
-  }
-
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = error => reject(error)
-    })
   }
 
   const getTotalMembers = () => {

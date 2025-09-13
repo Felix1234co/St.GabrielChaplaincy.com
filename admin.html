@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - St. Gabriel Chaplaincy</title>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         * {
@@ -829,11 +828,6 @@
     </div>
 
     <script>
-        // Supabase configuration
-        const supabaseUrl = 'https://sqnofatsjaedyufltppj.supabase.co'
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbm9mYXRzamFlZHl1Zmx0cHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzkxOTIsImV4cCI6MjA3MzExNTE5Mn0.teGpVU2XPFyLoAWGI6VAD2FR2fFeXEjBBYyFiBMvZZo'
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-
         // Global variables
         let currentMembers = [];
         let filteredMembers = [];
@@ -887,40 +881,13 @@
             }
         }
 
-        async function loadMembers() {
-            try {
-                const { data, error } = await supabase
-                    .from('members')
-                    .select('*')
-                    .order('registration_date', { ascending: false });
-                if (error) throw error;
-                currentMembers = data.map(member => ({
-                    memberData: {
-                        id: member.member_id,
-                        fullName: member.full_name,
-                        emailAddress: member.email_address,
-                        phoneNumber: member.phone_number,
-                        dateOfBirth: member.date_of_birth,
-                        ministry: member.ministry,
-                        sacramentStatus: member.sacrament_status,
-                        yearsInFaith: member.years_in_faith,
-                        paymentMethod: 'N/A',
-                        paymentReference: 'N/A'
-                    },
-                    timestamp: member.registration_date,
-                    status: member.status || 'pending_id_generation'
-                }));
-                filteredMembers = [...currentMembers];
-
-                updateStats();
-                renderMembersTable();
-            } catch (error) {
-                console.error('Error loading members:', error);
-                currentMembers = [];
-                filteredMembers = [];
-                updateStats();
-                renderMembersTable();
-            }
+        function loadMembers() {
+            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+            currentMembers = notifications;
+            filteredMembers = [...currentMembers];
+            
+            updateStats();
+            renderMembersTable();
         }
 
         function updateStats() {
@@ -1235,18 +1202,15 @@
             }, 500);
         }
 
-        async function markAsProcessed(memberId) {
+        function markAsProcessed(memberId) {
             if (confirm('Mark this member as processed? This will update their status to completed.')) {
-                try {
-                    const { error } = await supabase
-                        .from('members')
-                        .update({ status: 'processed' })
-                        .eq('member_id', memberId);
-                    if (error) throw error;
+                const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+                const memberIndex = notifications.findIndex(m => m.memberData.id === memberId);
+                
+                if (memberIndex !== -1) {
+                    notifications[memberIndex].status = 'processed';
+                    localStorage.setItem('adminNotifications', JSON.stringify(notifications));
                     loadMembers();
-                } catch (error) {
-                    console.error('Error updating member status:', error);
-                    alert('Error updating status. Please try again.');
                 }
             }
         }

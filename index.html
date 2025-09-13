@@ -6,7 +6,6 @@
     <title>St. Gabriel Chaplaincy - Member Registration</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
-    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         .gradient-bg {
@@ -312,7 +311,7 @@
                                     <p class="text-xs text-gray-400 mt-1">JPG, PNG (Max 5MB)</p>
                                     <p class="text-xs text-blue-600 mt-1">📱 Tap to use camera or gallery</p>
                                 </div>
-                                <input id="passport" type="file" class="hidden" accept="image/*" required>
+                                <input id="passport" type="file" class="hidden file-input-mobile" accept="image/*" capture="environment" required>
                             </label>
 
                             <div id="passportPreview" class="hidden">
@@ -447,7 +446,7 @@
                                         <p class="text-sm text-green-600 text-center px-2" id="screenshotLabel">📱 Upload payment receipt/screenshot</p>
                                         <p class="text-xs text-blue-600 mt-1">📷 Tap to use camera or gallery</p>
                                     </div>
-                                    <input id="paymentScreenshot" type="file" class="hidden" accept="image/*">
+                                    <input id="paymentScreenshot" type="file" class="hidden file-input-mobile" accept="image/*" capture="environment">
                                 </label>
                                 <div id="screenshotPreview" class="hidden mt-4 text-center">
                                     <img id="screenshotImage" src="/placeholder.svg" alt="Payment screenshot" class="max-w-48 max-h-48 rounded-lg border-2 border-green-300 mx-auto">
@@ -517,11 +516,6 @@
     </footer>
 
     <script>
-        // Supabase configuration
-        const supabaseUrl = 'https://sqnofatsjaedyufltppj.supabase.co'
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxbm9mYXRzamFlZHl1Zmx0cHBqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc1MzkxOTIsImV4cCI6MjA3MzExNTE5Mn0.teGpVU2XPFyLoAWGI6VAD2FR2fFeXEjBBYyFiBMvZZo'
-        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey)
-
         let currentMemberData = null;
 
         // Initialize page
@@ -530,17 +524,9 @@
             setupFormHandlers();
         });
 
-        async function updateMemberCount() {
-            try {
-                const { data, error } = await supabase
-                    .from('members')
-                    .select('id', { count: 'exact' });
-                if (error) throw error;
-                document.getElementById('totalMembers').textContent = data.length;
-            } catch (error) {
-                console.error('Error fetching member count:', error);
-                document.getElementById('totalMembers').textContent = '0';
-            }
+        function updateMemberCount() {
+            const count = localStorage.getItem('memberCounter') || '0';
+            document.getElementById('totalMembers').textContent = count;
         }
 
         function setupFormHandlers() {
@@ -733,7 +719,7 @@
             }, 2000);
         }
 
-        async function processSuccessfulPayment(memberId, paymentMethod, paymentReference) {
+        function processSuccessfulPayment(memberId, paymentMethod, paymentReference) {
             const formData = new FormData(document.getElementById('registrationForm'));
             const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
             
@@ -752,8 +738,11 @@
                 passportPhoto: document.getElementById('passport').files[0] ? 'uploaded' : 'none'
             };
 
-            // Save to database
-            await saveMemberData(currentMemberData);
+            // Save to localStorage (in production, send to backend)
+            saveMemberData(currentMemberData);
+            
+            // Send admin notification
+            sendAdminNotification(currentMemberData);
             
             // Update statistics
             updateStats();
@@ -763,32 +752,22 @@
             showSuccessModal();
         }
 
-        async function saveMemberData(memberData) {
-            const formData = new FormData(document.getElementById('registrationForm'));
-            const ministry = formData.get('ministry') === 'Other' ? formData.get('customMinistry') : formData.get('ministry');
-            const memberEntry = {
-                member_id: memberData.id,
-                full_name: formData.get('fullName'),
-                email_address: formData.get('emailAddress'),
-                phone_number: formData.get('phoneNumber'),
-                date_of_birth: formData.get('dateOfBirth'),
-                ministry: ministry,
-                sacrament_status: formData.get('sacramentStatus'),
-                years_in_faith: formData.get('yearsInFaith'),
-                registration_date: new Date().toISOString(),
-                status: 'pending_id_generation'
-            };
-            try {
-                const { error } = await supabase
-                    .from('members')
-                    .insert([memberEntry]);
-                if (error) throw error;
-            } catch (error) {
-                console.error('Error saving member data:', error);
-            }
+        function saveMemberData(memberData) {
+            const members = JSON.parse(localStorage.getItem('members') || '[]');
+            members.push(memberData);
+            localStorage.setItem('members', JSON.stringify(members));
         }
 
-
+        function sendAdminNotification(memberData) {
+            const notifications = JSON.parse(localStorage.getItem('adminNotifications') || '[]');
+            notifications.push({
+                memberData: memberData,
+                timestamp: new Date().toISOString(),
+                needsIdCard: true,
+                status: 'pending_id_generation'
+            });
+            localStorage.setItem('adminNotifications', JSON.stringify(notifications));
+        }
 
         function updateStats() {
             const today = new Date().toISOString().split('T')[0];
@@ -803,6 +782,9 @@
 
             localStorage.setItem('registrationStats', JSON.stringify(stats));
 
+            const memberCounter = parseInt(localStorage.getItem('memberCounter') || '0') + 1;
+            localStorage.setItem('memberCounter', memberCounter.toString());
+            
             updateMemberCount();
         }
 
